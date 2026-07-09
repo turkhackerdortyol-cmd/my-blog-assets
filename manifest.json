@@ -1,6 +1,6 @@
 {
-  "name": "Mifrm Forum",
-  "short_name": "MiFR",
+  "name": "Forum",
+  "short_name": "Forum",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#282620",

@@ -66,3 +66,36 @@ html[data-vb-theme="lacivert"]{--dk:#161c2b;--hbg:#1b2740;--blue:#3a5fa0;--blue-
 
 /* Tema ayarları panelini ve gizli yardımcı sınıfları gizle */
 #theme-settings-section{display:none!important}.mifrm-cfg-hidden{display:none!important}
+
+/* ================================================================
+   PWA AÇILIŞ (SPLASH) EKRANI
+   ================================================================ */
+#vb-splash{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:var(--hbg);opacity:1;visibility:visible;transition:opacity .35s ease,visibility .35s ease}
+#vb-splash.vb-splash-hide{opacity:0;visibility:hidden;pointer-events:none}
+.vb-splash-inner{display:flex;flex-direction:column;align-items:center;gap:16px}
+.vb-splash-logo{font-size:21px;font-weight:800;color:var(--w);letter-spacing:.2px;font-family:inherit}
+.vb-splash-logo span{color:var(--blue)}
+.vb-splash-spinner{width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--blue);animation:vbSplashSpin .8s linear infinite}
+@keyframes vbSplashSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.vb-splash-spinner{animation-duration:2s}}
+
+/* ================================================================
+   PWA YÜKLEME BANNERI (teyit.org tarzı alt bant)
+   ================================================================ */
+.vb-pwa-banner{position:fixed;left:0;right:0;bottom:0;z-index:99998;display:none;flex-direction:column;gap:12px;background:var(--hbg);color:var(--w);padding:18px 20px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 28px rgba(0,0,0,.28);transform:translateY(100%);opacity:0;transition:transform .32s cubic-bezier(.22,.9,.32,1),opacity .32s ease}
+.vb-pwa-banner.vb-pwa-show{display:flex;transform:translateY(0);opacity:1}
+.vb-pwa-banner-x{position:absolute;top:10px;right:12px;background:transparent;border:0;color:var(--w);opacity:.6;font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:4px;transition:opacity .2s,background .2s}
+.vb-pwa-banner-x:hover{opacity:1;background:rgba(255,255,255,.1)}
+.vb-pwa-banner-icon{width:38px;height:38px;border-radius:10px;background:rgba(var(--blue-rgb),.18);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.vb-pwa-banner-text{padding-right:24px}
+.vb-pwa-banner-title{font-size:15px;font-weight:800;color:var(--green);margin-bottom:3px}
+.vb-pwa-banner-desc{font-size:12.5px;line-height:1.5;color:var(--w);opacity:.82}
+.vb-pwa-banner-actions{display:flex;align-items:center;justify-content:flex-end;gap:18px}
+.vb-pwa-later{background:transparent;border:0;color:var(--w);opacity:.75;font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer;padding:6px 2px}
+.vb-pwa-later:hover{opacity:1}
+.vb-pwa-install{background:var(--blue);color:var(--w);border:0;border-radius:7px;padding:11px 22px;font-size:13px;font-weight:800;letter-spacing:.3px;cursor:pointer;transition:filter .2s,transform .15s}
+.vb-pwa-install:hover{filter:brightness(1.08)}
+.vb-pwa-install:active{transform:scale(.97)}
+@media(min-width:640px){
+.vb-pwa-banner{left:auto;right:22px;bottom:22px;max-width:360px;border-radius:14px;padding:20px 22px}
+}
