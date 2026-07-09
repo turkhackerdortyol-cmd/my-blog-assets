@@ -1,0 +1,34 @@
+{
+  "name": "Sitenizin Tam Adı Buraya",
+  "short_name": "Kısa Ad",
+  "description": "Güncel konular, tartışmalar ve daha fazlası artık cebinizde.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f5f4ee",
+  "theme_color": "#c15f3c",
+  "lang": "tr",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "https://turkhackerdortyol-cmd.github.io/my-blog-assets/1000589759-photoaidcom-cropped.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://turkhackerdortyol-cmd.github.io/my-blog-assets/1000589759-photoaidcom-cropped.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://turkhackerdortyol-cmd.github.io/my-blog-assets/1000589759-photoaidcom-cropped.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
