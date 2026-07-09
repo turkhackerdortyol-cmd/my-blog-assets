@@ -1033,3 +1033,153 @@ document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('vb-similar-topics'))loadSimilarTopics();
 });
 //
+
+/* ============================================================
+   BÖLÜM 9 — PWA: Açılış (Splash) Ekranı + Uygulama Yükleme Bannerı
+   ============================================================ */
+(function(){
+'use strict';
+var PWA_DISMISS_KEY='vbPwaDismissedUntil';
+var PWA_INSTALLED_KEY='vbPwaInstalled';
+var deferredPrompt=null;
+
+function isStandalone(){
+  try{
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true;
+  }catch(e){ return false; }
+}
+function isPermanentlyDismissed(){
+  try{ return localStorage.getItem(PWA_INSTALLED_KEY)==='1'; }catch(e){ return false; }
+}
+function isTemporarilyDismissed(){
+  try{
+    var until=parseInt(localStorage.getItem(PWA_DISMISS_KEY)||'0',10);
+    return Date.now() < until;
+  }catch(e){ return false; }
+}
+function isIos(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent||'');
+}
+function isSafari(){
+  var ua=navigator.userAgent||'';
+  return /safari/i.test(ua) && !/crios|fxios|edgios|chrome|android/i.test(ua);
+}
+
+/* --- Splash ekranını kapat --- */
+function hideSplash(){
+  var el=document.getElementById('vb-splash');
+  if(!el)return;
+  el.classList.add('vb-splash-hide');
+  setTimeout(function(){ if(el&&el.parentNode) el.style.display='none'; },400);
+}
+if(document.readyState==='complete'){
+  hideSplash();
+}else{
+  window.addEventListener('load',hideSplash);
+  /* Güvenlik ağı: herhangi bir sebeple 'load' hiç tetiklenmezse
+     3 sn sonra yine de kapat, kullanıcı sonsuza dek splash'ta kalmasın. */
+  setTimeout(hideSplash,3000);
+}
+
+/* --- Uygulama yükleme bannerı --- */
+function showPwaBanner(){
+  if(isStandalone()||isPermanentlyDismissed()||isTemporarilyDismissed())return;
+  var el=document.getElementById('vbPwaBanner');
+  if(!el)return;
+  if(isIos()&&isSafari()&&!deferredPrompt){
+    var descEl=document.getElementById('vbPwaBannerDesc');
+    var btn=document.getElementById('vbPwaInstallBtn');
+    if(descEl)descEl.textContent='Paylaş düğmesine dokunun, ardından "Ana Ekrana Ekle" seçeneğini seçin.';
+    if(btn)btn.style.display='none';
+  }
+  setTimeout(function(){
+    el.setAttribute('aria-hidden','false');
+    el.classList.add('vb-pwa-show');
+  },600);
+}
+
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  deferredPrompt=e;
+  showPwaBanner();
+});
+
+window.addEventListener('appinstalled',function(){
+  try{ localStorage.setItem(PWA_INSTALLED_KEY,'1'); }catch(e){}
+  vbPwaHideBanner();
+});
+
+function vbPwaHideBanner(){
+  var el=document.getElementById('vbPwaBanner');
+  if(!el)return;
+  el.classList.remove('vb-pwa-show');
+  el.setAttribute('aria-hidden','true');
+}
+
+window.vbPwaInstall=function(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(choice){
+      if(choice&&choice.outcome==='accepted'){
+        try{ localStorage.setItem(PWA_INSTALLED_KEY,'1'); }catch(e){}
+      }else{
+        try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now()+7*24*60*60*1000)); }catch(e){}
+      }
+      deferredPrompt=null;
+      vbPwaHideBanner();
+    }).catch(function(){ vbPwaHideBanner(); });
+  }else{
+    /* iOS Safari: native prompt yok, kullanıcı talimatı okudu, kapat. */
+    vbPwaHideBanner();
+  }
+};
+
+window.vbPwaDismiss=function(temporary){
+  try{
+    if(temporary){
+      localStorage.setItem(PWA_DISMISS_KEY, String(Date.now()+7*24*60*60*1000));
+    }else{
+      localStorage.setItem(PWA_DISMISS_KEY, String(Date.now()+365*24*60*60*1000));
+    }
+  }catch(e){}
+  vbPwaHideBanner();
+};
+
+/* iOS Safari'de beforeinstallprompt hiç tetiklenmediği için,
+   sayfa tamamen yüklendikten kısa bir süre sonra manuel kontrol et. */
+if(isIos()&&isSafari()){
+  window.addEventListener('load',function(){ setTimeout(showPwaBanner,1200); });
+}
+})();
+
+/* ============================================================
+   BÖLÜM 10 — Google Identity Services'i geciktirmeli (idle) yükle
+   ============================================================
+   Script daha önce head'de senkron/async etiketle yükleniyordu.
+   mifrmRenderUser() ve window.onGoogleLibraryLoad zaten script'in
+   geç gelmesini sorunsuz karşıladığı için, ilk sayfa yüklemesiyle
+   bant genişliği/CPU rekabetine girmemesi için tarayıcı boşta
+   kaldığında (requestIdleCallback) dinamik olarak enjekte ediyoruz. */
+(function(){
+  var loaded=false;
+  function loadGsi(){
+    if(loaded)return;
+    loaded=true;
+    var s=document.createElement('script');
+    s.src='https://accounts.google.com/gsi/client';
+    s.async=true;
+    document.head.appendChild(s);
+  }
+  if(typeof window.requestIdleCallback === 'function'){
+    requestIdleCallback(loadGsi,{timeout:4000});
+  }else{
+    window.addEventListener('load',function(){ setTimeout(loadGsi,1500); });
+  }
+  /* Kullanıcı "Hızlı Konu Aç" butonuna boşta bekleme dolmadan önce
+     tıklarsa script'i beklemeden hemen yükle. */
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('mifrm-nav-btn');
+    if(btn)btn.addEventListener('click',loadGsi,{once:true});
+  });
+})();
