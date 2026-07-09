@@ -21,8 +21,8 @@
 */
 
 const MANIFEST_JSON = {
-  "name": "Sitenizin Tam Adı Buraya",
-  "short_name": "Kısa Ad",
+  "name": "Mifrm Blogger Forum",
+  "short_name": "MİFRM",
   "description": "Güncel konular, tartışmalar ve daha fazlası artık cebinizde.",
   "id": "/",
   "start_url": "/?source=pwa",
