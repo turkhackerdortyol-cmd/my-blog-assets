@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Yönlendiriliyor…</title>
+<script>
+  // GitHub Pages sunucu tarafı yönlendirme yapamadığı için,
+  // olmayan bir yol istendiğinde bu sayfa devreye girer,
+  // gerçek yolu bir sorgu parametresine gizleyip index.html'e yönlendirir.
+  // index.html açıldığında router.js bu parametreyi okuyup gerçek adresi geri yükler.
+  var path = location.pathname + location.search + location.hash;
+  location.replace('/?__redirect=' + encodeURIComponent(path));
+</script>
+</head>
+<body></body>
+</html>
