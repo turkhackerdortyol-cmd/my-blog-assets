@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title><%= typeof title !== 'undefined' ? title : (siteSettings.site_name || 'MiFRM Forum') %></title>
+<% if (typeof description !== 'undefined' && description) { %><meta name="description" content="<%= description %>"><% } %>
+<% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %><link rel="canonical" href="<%= canonicalUrl %>"><% } %>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
+<link rel="stylesheet" href="/static/css/theme-vb.css">
+<link rel="stylesheet" href="/static/css/app-extra.css">
+<% if (typeof jsonLd !== 'undefined' && jsonLd) { %>
+<script type="application/ld+json"><%- jsonLd %></script>
+<% } %>
+</head>
+<body>
+<%- include('header') %>
+<main class="page-wrapper main-content-layout">
+<div class="main-column">

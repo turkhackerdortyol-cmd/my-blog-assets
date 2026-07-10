@@ -1,0 +1,51 @@
+<header class="hamdi-header-wrapper">
+  <div class="hamdi-header-container">
+    <div class="hamdi-logo-area">
+      <a href="/"><%= siteSettings.site_name || 'MiFRM' %><span>Forum</span></a>
+    </div>
+    <nav class="hamdi-main-nav">
+      <a class="hamdi-nav-item" href="/"><i class="fas fa-house"></i> Anasayfa</a>
+      <% navCategories.forEach(function(c){ %>
+        <a class="hamdi-nav-item" href="/<%= c.slug %>"><i class="fas <%= c.icon || 'fa-comments' %>"></i> <%= c.name %></a>
+      <% }); %>
+    </nav>
+    <div class="hamdi-user-zone">
+      <% if (currentUser) { %>
+        <div class="mf-user-dd">
+          <button type="button" class="mf-user-btn" onclick="mfToggleUserMenu()">
+            <span class="hamdi-avatar show">
+              <% if (currentUser.avatar_url) { %><img src="<%= currentUser.avatar_url %>" alt="">
+              <% } else { %><i class="fas fa-user"></i><% } %>
+            </span>
+            <span class="mf-uname"><%= currentUser.username %> <i class="fas fa-circle-check mf-verified" title="Onaylı üye"></i></span>
+          </button>
+          <div class="mf-user-menu" id="mfUserMenu">
+            <a href="/uye/<%= currentUser.username %>"><i class="fas fa-id-card"></i> Profilim</a>
+            <a href="/profil/duzenle"><i class="fas fa-pen"></i> Profili Düzenle</a>
+            <% if (['mod','admin'].includes(currentUser.role)) { %>
+              <a href="#" onclick="openAdminPanel();return false;"><i class="fas fa-shield-halved"></i> Yönetim Paneli</a>
+            <% } %>
+            <a href="/cikis"><i class="fas fa-right-from-bracket"></i> Çıkış Yap</a>
+          </div>
+        </div>
+      <% } else { %>
+        <a class="hamdi-nav-item" href="/giris"><i class="fas fa-right-to-bracket"></i> Giriş</a>
+        <a class="hamdi-nav-item mf-cta" href="/kayit"><i class="fas fa-user-plus"></i> Üye Ol</a>
+      <% } %>
+    </div>
+  </div>
+</header>
+
+<% if (currentUser && ['mod','admin'].includes(currentUser.role)) { %>
+<div id="mfAdminOverlay" class="mf-admin-overlay" onclick="if(event.target===this)closeAdminPanel()">
+  <aside id="mfAdminPanel" class="mf-admin-panel">
+    <div class="mf-admin-panel-head">
+      <h3><i class="fas fa-shield-halved"></i> Yönetim Paneli</h3>
+      <button type="button" onclick="closeAdminPanel()"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div id="mfAdminPanelBody" class="mf-admin-panel-body">
+      <div class="mf-admin-loading"><i class="fas fa-spinner fa-spin"></i> Yükleniyor...</div>
+    </div>
+  </aside>
+</div>
+<% } %>

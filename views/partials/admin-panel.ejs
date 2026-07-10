@@ -1,0 +1,75 @@
+<div class="mf-admin-tabs">
+  <button type="button" class="mf-admin-tab active" onclick="mfAdminTab(this,'catTab')"><i class="fas fa-layer-group"></i> Kategoriler</button>
+  <button type="button" class="mf-admin-tab" onclick="mfAdminTab(this,'userTab')"><i class="fas fa-users"></i> Üyeler</button>
+  <button type="button" class="mf-admin-tab" onclick="mfAdminTab(this,'settingsTab')"><i class="fas fa-gear"></i> Site Ayarları</button>
+</div>
+
+<div id="catTab" class="mf-admin-tab-pane active">
+  <h4>Kategori Ekle</h4>
+  <form method="post" action="/admin/kategori/ekle" class="mf-inline-form">
+    <input type="text" name="name" placeholder="Kategori adı" required>
+    <input type="text" name="icon" placeholder="fa-comments (FontAwesome sınıfı)">
+    <input type="text" name="description" placeholder="Açıklama (opsiyonel)">
+    <button type="submit" class="mf-cta"><i class="fas fa-plus"></i> Ekle</button>
+  </form>
+  <h4>Mevcut Kategoriler</h4>
+  <table class="mf-admin-table">
+    <% categories.forEach(function(c){ %>
+      <tr>
+        <td><i class="fas <%= c.icon %>"></i> <%= c.name %></td>
+        <td><code><%= c.slug %></code></td>
+        <td>
+          <form method="post" action="/admin/kategori/<%= c.id %>/sil" onsubmit="return confirm('Kategori silinsin mi? İçindeki tüm konular da silinir!');">
+            <button type="submit" class="mf-danger-link"><i class="fas fa-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </table>
+</div>
+
+<div id="userTab" class="mf-admin-tab-pane">
+  <table class="mf-admin-table">
+    <% users.forEach(function(u){ %>
+      <tr>
+        <td><%= u.username %><br><small><%= u.email %></small></td>
+        <td>
+          <form method="post" action="/admin/uye/<%= u.id %>/rol" class="mf-inline-form">
+            <select name="role" onchange="this.form.submit()">
+              <option value="member" <%= u.role==='member'?'selected':'' %>>Üye</option>
+              <option value="mod" <%= u.role==='mod'?'selected':'' %>>Moderatör</option>
+              <option value="admin" <%= u.role==='admin'?'selected':'' %>>Admin</option>
+            </select>
+          </form>
+        </td>
+        <td>
+          <form method="post" action="/admin/uye/<%= u.id %>/yasakla" class="mf-inline-form">
+            <button type="submit" class="<%= u.is_banned ? '' : 'mf-danger-link' %>"><i class="fas fa-ban"></i> <%= u.is_banned ? 'Yasağı Kaldır' : 'Engelle' %></button>
+          </form>
+        </td>
+        <td>
+          <form method="post" action="/admin/uye/<%= u.id %>/sil" onsubmit="return confirm('Bu üye tamamen silinsin mi?');">
+            <button type="submit" class="mf-danger-link"><i class="fas fa-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </table>
+</div>
+
+<div id="settingsTab" class="mf-admin-tab-pane">
+  <form method="post" action="/admin/ayarlar">
+    <label>Site Adı</label>
+    <input type="text" name="site_name" value="<%= settings.site_name || '' %>">
+    <label>Slogan</label>
+    <input type="text" name="site_slogan" value="<%= settings.site_slogan || '' %>">
+    <label>Alt Bilgi (Footer) Metni</label>
+    <input type="text" name="footer_text" value="<%= settings.footer_text || '' %>">
+    <label>Kayıtlar</label>
+    <select name="registration_open">
+      <option value="true" <%= settings.registration_open==='true'?'selected':'' %>>Açık</option>
+      <option value="false" <%= settings.registration_open==='false'?'selected':'' %>>Kapalı</option>
+    </select>
+    <button type="submit" class="mf-cta mf-cta-block"><i class="fas fa-check"></i> Kaydet</button>
+  </form>
+</div>
