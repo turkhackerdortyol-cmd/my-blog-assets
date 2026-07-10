@@ -1,0 +1,26 @@
+{
+  "name": "mifrm-forum",
+  "version": "1.0.0",
+  "description": "MiFRM Forum - Node.js + Supabase tabanlı, gerçek üyelik ve admin paneli içeren forum uygulaması",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node src/seed.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14",
+    "slugify": "^1.6.6"
+  }
+}
