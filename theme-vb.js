@@ -254,7 +254,7 @@ function renderVbTopics(shown){var target=document.getElementById("vb-last-posts
 +'<div class="hamdi-avatar-holder" aria-hidden="true">'+avatarHtml
 +'<div class="hamdi-status-dot"></div></div>'
 +'<div class="hamdi-main-info">'
-+'<div class="hamdi-title"><a href="'+p.link+'">'+p.title+'</a></div>'
++'<div class="hamdi-title"><a href="'+p.link+'">'+safeText(p.title)+'</a></div>'
 +'<div class="hamdi-meta">'+catHtml
 +'<i class="fas fa-user" aria-hidden="true" style="margin-right:3px"></i>'
 +'<span class="hamdi-author">'+safeText(p.author)+'</span> &middot; '+p.date+'</div>'
@@ -283,7 +283,7 @@ function loadForumSystem(){var target=document.getElementById("vb-last-posts-tar
 _vbShown=MFG("home.topicsCount",10);renderVbTopics(_vbShown);var lastTopicEl=document.getElementById("stat-last-topic");if(lastTopicEl&&entries[0]){var lnk=getAltLink(entries[0]);lastTopicEl.innerHTML='<strong>'+safeText(getAuthorName(entries[0]))+'</strong> — '
 +'<a href="'+(lnk?lnk.href:"#")+'" style="color:var(--lnk);">'
 +safeText(entries[0].title?entries[0].title.$t:"")+'</a>';}
-document.querySelectorAll(".class-target-label-box").forEach(function(box){var label=box.getAttribute("data-label");var lBox=box.querySelector(".cat-last-post-box");if(!lBox)return;var last=catMap[label];var iconEl=document.querySelector('.category-icon-wrapper[data-label="'+label+'"] i');var isNew=last&&last.published&&(Date.now()-tsOf(last.published))<259200000;if(iconEl)iconEl.className='fas '+(isNew?'fa-folder-open':'fa-folder');if(last){lBox.innerHTML='Son Konu: <a class="cat-last-title" href="'+last.link+'">'+last.title+'</a>'
+document.querySelectorAll(".class-target-label-box").forEach(function(box){var label=box.getAttribute("data-label");var lBox=box.querySelector(".cat-last-post-box");if(!lBox)return;var last=catMap[label];var iconEl=document.querySelector('.category-icon-wrapper[data-label="'+label+'"] i');var isNew=last&&last.published&&(Date.now()-tsOf(last.published))<259200000;if(iconEl)iconEl.className='fas '+(isNew?'fa-folder-open':'fa-folder');if(last){lBox.innerHTML='Son Konu: <a class="cat-last-title" href="'+last.link+'">'+safeText(last.title)+'</a>'
 +'<div class="cat-last-meta">Gönderen: <strong>'+safeText(last.author)+'</strong> — '+last.date+'</div>';}else{lBox.innerHTML='<em style="color:var(--meta);">Yükleniyor...</em>';mifrmFillCatLastPost(label,lBox,iconEl);}});}
 if(cmtFeed){var cmtTotal=cmtFeed["openSearch$totalResults"]?parseInt(cmtFeed["openSearch$totalResults"].$t,10):0;var cmtEl=document.getElementById("stat-total-comments");if(cmtEl)cmtEl.textContent=cmtTotal.toLocaleString("tr-TR");var lastReplyEl=document.getElementById("stat-last-reply");var cmtEntries=cmtFeed.entry||[];if(lastReplyEl&&cmtEntries.length){var c=cmtEntries[0];var clnk=getAltLink(c);var postTitle=(c.title&&c.title.$t)?c.title.$t:"Bir konu";var body=((c.content&&c.content.$t)||(c.summary&&c.summary.$t)||"").replace(/<\/?[^>]+>/g,"").trim();if(body.length>55)body=body.substring(0,55)+"...";lastReplyEl.innerHTML='<strong>'+safeText(getAuthorName(c))+'</strong>'
 +' — <a href="'+(clnk?clnk.href:"#")+'" style="color:var(--lnk);">'+safeText(postTitle)+'</a>'
@@ -1033,125 +1033,6 @@ document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('vb-similar-topics'))loadSimilarTopics();
 });
 //
-
-/* ============================================================
-   BÖLÜM 9 — PWA: Açılış (Splash) Ekranı + Uygulama Yükleme Bannerı
-   ============================================================ */
-(function(){
-'use strict';
-var PWA_DISMISS_KEY='vbPwaDismissedUntil';
-var PWA_INSTALLED_KEY='vbPwaInstalled';
-var deferredPrompt=null;
-
-function isStandalone(){
-  try{
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           window.navigator.standalone === true;
-  }catch(e){ return false; }
-}
-function isPermanentlyDismissed(){
-  try{ return localStorage.getItem(PWA_INSTALLED_KEY)==='1'; }catch(e){ return false; }
-}
-function isTemporarilyDismissed(){
-  try{
-    var until=parseInt(localStorage.getItem(PWA_DISMISS_KEY)||'0',10);
-    return Date.now() < until;
-  }catch(e){ return false; }
-}
-function isIos(){
-  return /iphone|ipad|ipod/i.test(navigator.userAgent||'');
-}
-function isSafari(){
-  var ua=navigator.userAgent||'';
-  return /safari/i.test(ua) && !/crios|fxios|edgios|chrome|android/i.test(ua);
-}
-
-/* --- Splash ekranını kapat --- */
-function hideSplash(){
-  var el=document.getElementById('vb-splash');
-  if(!el)return;
-  el.classList.add('vb-splash-hide');
-  setTimeout(function(){ if(el&&el.parentNode) el.style.display='none'; },400);
-}
-if(document.readyState==='complete'){
-  hideSplash();
-}else{
-  window.addEventListener('load',hideSplash);
-  /* Güvenlik ağı: herhangi bir sebeple 'load' hiç tetiklenmezse
-     3 sn sonra yine de kapat, kullanıcı sonsuza dek splash'ta kalmasın. */
-  setTimeout(hideSplash,3000);
-}
-
-/* --- Uygulama yükleme bannerı --- */
-function showPwaBanner(){
-  if(isStandalone()||isPermanentlyDismissed()||isTemporarilyDismissed())return;
-  var el=document.getElementById('vbPwaBanner');
-  if(!el)return;
-  if(isIos()&&isSafari()&&!deferredPrompt){
-    var descEl=document.getElementById('vbPwaBannerDesc');
-    var btn=document.getElementById('vbPwaInstallBtn');
-    if(descEl)descEl.textContent='Paylaş düğmesine dokunun, ardından "Ana Ekrana Ekle" seçeneğini seçin.';
-    if(btn)btn.style.display='none';
-  }
-  setTimeout(function(){
-    el.setAttribute('aria-hidden','false');
-    el.classList.add('vb-pwa-show');
-  },600);
-}
-
-window.addEventListener('beforeinstallprompt',function(e){
-  e.preventDefault();
-  deferredPrompt=e;
-  showPwaBanner();
-});
-
-window.addEventListener('appinstalled',function(){
-  try{ localStorage.setItem(PWA_INSTALLED_KEY,'1'); }catch(e){}
-  vbPwaHideBanner();
-});
-
-function vbPwaHideBanner(){
-  var el=document.getElementById('vbPwaBanner');
-  if(!el)return;
-  el.classList.remove('vb-pwa-show');
-  el.setAttribute('aria-hidden','true');
-}
-
-window.vbPwaInstall=function(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(choice){
-      if(choice&&choice.outcome==='accepted'){
-        try{ localStorage.setItem(PWA_INSTALLED_KEY,'1'); }catch(e){}
-      }else{
-        try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now()+7*24*60*60*1000)); }catch(e){}
-      }
-      deferredPrompt=null;
-      vbPwaHideBanner();
-    }).catch(function(){ vbPwaHideBanner(); });
-  }else{
-    /* iOS Safari: native prompt yok, kullanıcı talimatı okudu, kapat. */
-    vbPwaHideBanner();
-  }
-};
-
-window.vbPwaDismiss=function(temporary){
-  try{
-    if(temporary){
-      localStorage.setItem(PWA_DISMISS_KEY, String(Date.now()+7*24*60*60*1000));
-    }else{
-      localStorage.setItem(PWA_DISMISS_KEY, String(Date.now()+365*24*60*60*1000));
-    }
-  }catch(e){}
-  vbPwaHideBanner();
-};
-
-/* iOS Safari'de beforeinstallprompt hiç tetiklenmediği için,
-   sayfa tamamen yüklendikten kısa bir süre sonra manuel kontrol et. */
-if(isIos()&&isSafari()){
-  window.addEventListener('load',function(){ setTimeout(showPwaBanner,1200); });
-}
-})();
 
 /* ============================================================
    BÖLÜM 10 — Google Identity Services'i geciktirmeli (idle) yükle
