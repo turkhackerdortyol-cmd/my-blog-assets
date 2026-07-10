@@ -1,0 +1,98 @@
+/* ================================================================
+   MiFRM - Ek Bileşenler (Üyelik, Admin Panel, Editör, Beğeni, Profil)
+   theme-vb.css DEĞİŞTİRİLMEDİ. Bu dosya sadece yeni bileşenler için
+   aynı :root renk değişkenlerini kullanır.
+   ================================================================ */
+
+.mf-verified{color:var(--blue);font-size:11px;margin-left:2px}
+.mf-empty{padding:24px;text-align:center;color:var(--muted)}
+.mf-cta{background:var(--blue);color:#fff!important;border:none;padding:9px 16px;border-radius:6px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;text-decoration:none!important;cursor:pointer}
+.mf-cta:hover{background:var(--blue-dk)}
+.mf-cta-small{padding:6px 12px;font-size:12px}
+.mf-cta-block{width:100%;justify-content:center;margin-top:8px}
+
+/* Kullanıcı menüsü (header sağ üst) */
+.hamdi-user-zone{display:flex;align-items:center;gap:8px;position:relative}
+.mf-user-dd{position:relative}
+.mf-user-btn{background:transparent;border:none;color:#fff;display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px}
+.mf-user-btn:hover{background:rgba(255,255,255,.08)}
+.mf-uname{font-size:12px;font-weight:600}
+.mf-user-menu{display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--bdr);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:190px;z-index:9500;overflow:hidden}
+.mf-user-menu.open{display:block}
+.mf-user-menu a{display:flex;align-items:center;gap:8px;padding:10px 14px;color:var(--tc);font-size:13px}
+.mf-user-menu a:hover{background:var(--hover);text-decoration:none}
+.mf-cta.mf-cta-small,.hamdi-nav-item.mf-cta{background:var(--blue);color:#fff!important;border-radius:5px}
+
+/* Giriş / Kayıt kutuları */
+.mf-auth-box{max-width:420px;margin:32px auto;background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:28px}
+.mf-auth-box h1{font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--heading)}
+.mf-auth-box label{display:block;font-size:12px;font-weight:700;margin:12px 0 4px;color:var(--text2)}
+.mf-auth-box input,.mf-auth-box textarea,.mf-editor-block input,.mf-editor-block textarea,.mf-inline-form input,.mf-inline-form select{
+  width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-family:inherit;background:var(--w);color:var(--tc)
+}
+.mf-auth-links{display:flex;justify-content:space-between;margin-top:16px;font-size:12px}
+.mf-alert{padding:10px 12px;border-radius:6px;font-size:13px;margin-bottom:12px}
+.mf-alert-error{background:#fdecea;color:var(--red);border:1px solid #f3c6c2}
+.mf-alert-ok{background:#eaf7ef;color:var(--green);border:1px solid #c8e9d3}
+
+/* Editör */
+.mf-editor-block{padding:16px}
+.mf-editor-block input[type=text]{margin-bottom:10px;font-weight:700}
+.mf-editor-toolbar{display:flex;gap:6px;margin-bottom:8px}
+.mf-editor-toolbar button{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;width:34px;height:34px;color:var(--tc)}
+.mf-editor-toolbar button:hover{background:var(--hover)}
+.mf-editor-block textarea{min-height:120px;margin-bottom:10px;resize:vertical}
+.vb-embed-wrap{position:relative;padding-bottom:56.25%;height:0;margin:10px 0;border-radius:8px;overflow:hidden;background:#000}
+.vb-embed-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.vb-post-img{border-radius:8px;margin:8px 0}
+
+/* Beğeni butonu */
+.mf-like-btn{background:transparent;border:1px solid var(--border2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.mf-like-btn:hover{border-color:var(--red)}
+.mf-like-btn.liked{background:#fdecea;border-color:var(--red);color:var(--red)}
+.mf-like-btn.liked i{color:var(--red)}
+
+/* Moderasyon çubuğu */
+.mf-mod-bar{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.mf-mod-bar button{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:700;color:var(--tc);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.mf-mod-bar button.mf-danger,.mf-danger-link{color:var(--red)!important;background:transparent;border:none;cursor:pointer;font-size:13px}
+
+/* Profil */
+.mf-profile-head{display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:20px;margin-bottom:16px}
+.mf-profile-avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--muted);flex-shrink:0}
+.mf-profile-avatar img{width:100%;height:100%;object-fit:cover}
+.mf-profile-info h1{font-size:19px;display:flex;align-items:center;gap:6px}
+.mf-role-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--blue);color:#fff;margin-left:6px}
+.mf-role-badge.mf-role-mod{background:var(--green)}
+.mf-bio{font-size:13px;color:var(--text2);margin:6px 0}
+.mf-profile-meta{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:4px}
+.mf-profile-social{display:flex;gap:10px;margin-top:8px}
+.mf-profile-social a{width:30px;height:30px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;color:var(--tc)}
+
+/* Admin paneli (sağdan açılan popup) */
+.mf-admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20000;display:none}
+.mf-admin-overlay.open{display:block}
+.mf-admin-panel{position:fixed;top:0;right:-420px;width:400px;max-width:92vw;height:100%;background:var(--card);box-shadow:-8px 0 30px rgba(0,0,0,.25);transition:right .25s ease;display:flex;flex-direction:column;z-index:20001}
+.mf-admin-overlay.open .mf-admin-panel{right:0}
+.mf-admin-panel-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--bdr);background:var(--dkbg);color:#fff}
+.mf-admin-panel-head button{background:transparent;border:none;color:#fff;font-size:16px}
+.mf-admin-panel-body{padding:16px;overflow-y:auto;flex:1}
+.mf-admin-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.mf-admin-tab{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;color:var(--tc)}
+.mf-admin-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mf-admin-tab-pane{display:none}
+.mf-admin-tab-pane.active{display:block}
+.mf-admin-tab-pane h4{font-size:12px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.mf-inline-form{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.mf-admin-table{width:100%;border-collapse:collapse;font-size:12px}
+.mf-admin-table tr{border-bottom:1px solid var(--bdr)}
+.mf-admin-table td{padding:8px 4px;vertical-align:middle}
+.mf-admin-loading{text-align:center;padding:40px;color:var(--muted)}
+
+.mf-footer{background:var(--dkbg);color:#cfcabe;margin-top:30px;padding:24px 0 10px}
+.footer-copy{text-align:center;font-size:11px;padding:14px 0;color:#8a8474}
+
+@media(max-width:720px){
+  .hamdi-main-nav{display:none}
+  .mf-profile-head{flex-direction:column;text-align:center}
+}
