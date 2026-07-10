@@ -1,0 +1,103 @@
+<%
+const jsonLdObj = {
+  "@context": "https://schema.org",
+  "@type": "DiscussionForumPosting",
+  "headline": thread.title,
+  "text": thread.title,
+  "datePublished": thread.created_at,
+  "author": { "@type": "Person", "name": thread.users ? thread.users.username : "Üye" },
+  "interactionStatistic": [
+    { "@type": "InteractionCounter", "interactionType": "https://schema.org/CommentAction", "userInteractionCount": posts.length },
+    { "@type": "InteractionCounter", "interactionType": "https://schema.org/LikeAction", "userInteractionCount": thread.like_count || 0 }
+  ]
+};
+%>
+<%- include('partials/top', { title: thread.title + ' - ' + (siteSettings.site_name || 'MiFRM Forum'), canonicalUrl, jsonLd: JSON.stringify(jsonLdObj) }) %>
+
+<nav class="hm-breadcrumb">
+  <a href="/">Anasayfa</a><span class="hm-bc-sep">/</span>
+  <a href="/<%= thread.categories.slug %>"><%= thread.categories.name %></a><span class="hm-bc-sep">/</span>
+  <span class="hm-bc-current"><%= thread.title %></span>
+</nav>
+
+<% if (currentUser && ['mod','admin'].includes(currentUser.role)) { %>
+<div class="mf-mod-bar">
+  <form method="post" action="/thread/<%= thread.id %>/sabitle"><button type="submit"><i class="fas fa-thumbtack"></i> <%= thread.is_pinned ? 'Sabitlemeyi Kaldır' : 'Sabitle' %></button></form>
+  <form method="post" action="/thread/<%= thread.id %>/kilitle"><button type="submit"><i class="fas fa-lock"></i> <%= thread.is_locked ? 'Kilidi Aç' : 'Kilitle' %></button></form>
+  <form method="post" action="/thread/<%= thread.id %>/sil" onsubmit="return confirm('Bu konuyu silmek istediğinize emin misiniz?');"><button type="submit" class="mf-danger"><i class="fas fa-trash"></i> Konuyu Sil</button></form>
+</div>
+<% } %>
+
+<article class="xf-postbit xf-postbit-wrap">
+  <aside class="xf-aside">
+    <div class="xf-avatar-wrap"><span class="xf-avatar">
+      <% if (thread.users && thread.users.avatar_url) { %><img src="<%= thread.users.avatar_url %>" alt="">
+      <% } else { %><i class="fas fa-user"></i><% } %>
+    </span></div>
+    <div class="xf-uname"><%= thread.users ? thread.users.username : 'Silinmiş Üye' %> <i class="fas fa-circle-check mf-verified" title="Onaylı üye"></i></div>
+    <div class="xf-aside-info"><%= thread.users ? thread.users.role : '' %></div>
+  </aside>
+  <div class="xf-body">
+    <div class="xf-body-head">
+      <h1 class="xf-post-title"><%= thread.title %></h1>
+      <span class="hamdi-meta"><%= new Date(thread.created_at).toLocaleString('tr-TR') %> · <i class="fas fa-eye"></i> <%= thread.view_count %></span>
+    </div>
+    <div class="xf-post-body"><%- thread.body_html %></div>
+    <div class="xf-body-foot">
+      <button type="button" class="mf-like-btn <%= likedThreadIds.includes(thread.id)?'liked':'' %>" data-type="thread" data-id="<%= thread.id %>" onclick="mfToggleLike(this)">
+        <i class="fas fa-heart"></i> <span class="mf-like-count"><%= thread.like_count || 0 %></span>
+      </button>
+    </div>
+  </div>
+</article>
+
+<div class="comment-thread">
+  <div class="comment-thread-head"><i class="fas fa-comments"></i> Cevaplar (<%= posts.length %>)</div>
+  <div class="comment-thread-body" id="son">
+    <% posts.forEach(function(p){ %>
+      <article class="xf-postbit xf-postbit-wrap">
+        <aside class="xf-aside">
+          <div class="xf-avatar-wrap"><span class="xf-avatar">
+            <% if (p.users && p.users.avatar_url) { %><img src="<%= p.users.avatar_url %>" alt="">
+            <% } else { %><i class="fas fa-user"></i><% } %>
+          </span></div>
+          <div class="xf-uname"><%= p.users ? p.users.username : 'Silinmiş Üye' %> <i class="fas fa-circle-check mf-verified"></i></div>
+        </aside>
+        <div class="xf-body">
+          <div class="xf-body-head"><span class="hamdi-meta"><%= new Date(p.created_at).toLocaleString('tr-TR') %></span></div>
+          <div class="xf-post-body"><%- p.body_html %></div>
+          <div class="xf-body-foot">
+            <button type="button" class="mf-like-btn <%= likedPostIds.includes(p.id)?'liked':'' %>" data-type="post" data-id="<%= p.id %>" onclick="mfToggleLike(this)">
+              <i class="fas fa-heart"></i> <span class="mf-like-count"><%= p.like_count || 0 %></span>
+            </button>
+            <% if (currentUser && ['mod','admin'].includes(currentUser.role)) { %>
+              <form method="post" action="/post/<%= p.id %>/sil" onsubmit="return confirm('Bu mesajı silmek istediğinize emin misiniz?');" style="display:inline">
+                <button type="submit" class="mf-danger-link"><i class="fas fa-trash"></i></button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      </article>
+    <% }); %>
+    <% if (!posts.length) { %><p class="mf-empty">Henüz cevap yok. İlk cevabı sen yaz!</p><% } %>
+  </div>
+</div>
+
+<% if (currentUser) { %>
+  <% if (!thread.is_locked) { %>
+  <div class="forum-block mf-editor-block">
+    <div class="forum-header"><i class="fas fa-reply"></i> Cevap Yaz</div>
+    <form method="post" action="/thread/<%= thread.id %>/cevap">
+      <%- include('partials/editor-toolbar', { textareaId: 'replyBody' }) %>
+      <textarea id="replyBody" name="body" rows="6" placeholder="Cevabınızı yazın..." required></textarea>
+      <button type="submit" class="mf-cta"><i class="fas fa-paper-plane"></i> Gönder</button>
+    </form>
+  </div>
+  <% } else { %>
+    <p class="mf-empty"><i class="fas fa-lock"></i> Bu konu kilitlenmiş, yeni cevap yazılamaz.</p>
+  <% } %>
+<% } else { %>
+  <p class="mf-empty">Cevap yazmak için <a href="/giris?next=<%= encodeURIComponent(canonicalUrl) %>">giriş yapın</a>.</p>
+<% } %>
+
+<%- include('partials/footer') %>

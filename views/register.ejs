@@ -1,0 +1,22 @@
+<%- include('partials/top', { title: 'Üye Ol' }) %>
+
+<div class="mf-auth-box">
+  <h1><i class="fas fa-user-plus"></i> Üye Ol</h1>
+  <% if (error) { %><div class="mf-alert mf-alert-error"><%= error %></div><% } %>
+  <form method="post" action="/kayit">
+    <label>Kullanıcı adı</label>
+    <input type="text" name="username" value="<%= old.username || '' %>" required pattern="[a-zA-Z0-9_]{3,32}">
+    <label>E-posta</label>
+    <input type="email" name="email" value="<%= old.email || '' %>" required>
+    <label>Şifre</label>
+    <input type="password" name="password" required minlength="6">
+    <label>Şifre (tekrar)</label>
+    <input type="password" name="password2" required minlength="6">
+    <button type="submit" class="mf-cta mf-cta-block"><i class="fas fa-user-plus"></i> Üye Ol</button>
+  </form>
+  <div class="mf-auth-links">
+    <a href="/giris">Zaten üye misin? Giriş yap</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

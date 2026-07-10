@@ -1,0 +1,48 @@
+<%- include('partials/top', { title: (siteSettings.site_name || 'MiFRM Forum') + ' - Anasayfa' }) %>
+
+<div class="forum-block">
+  <div class="forum-header"><i class="fas fa-layer-group"></i> Kategoriler</div>
+  <% categories.forEach(function(c){ %>
+    <a class="forum-row hamdi-forum-row" href="/<%= c.slug %>">
+      <span class="category-icon-wrapper"><i class="fas <%= c.icon || 'fa-comments' %>"></i></span>
+      <span class="hamdi-main-info">
+        <span class="hamdi-title"><%= c.name %></span>
+        <span class="hamdi-meta"><%= c.description || '' %></span>
+      </span>
+      <span class="hamdi-arrow-zone"><i class="fas fa-chevron-right"></i></span>
+    </a>
+  <% }); %>
+  <% if (!categories.length) { %><p class="mf-empty">Henüz kategori eklenmemiş.</p><% } %>
+</div>
+
+<div class="hamdi-stat-block">
+  <div class="stat-grid-row">
+    <div class="stat-grid-cell"><div class="stat-cell-value"><%= stats.totalThreads %></div><div class="stat-cell-label">Konu</div></div>
+    <div class="stat-grid-cell"><div class="stat-cell-value"><%= stats.totalPosts %></div><div class="stat-cell-label">Mesaj</div></div>
+    <div class="stat-grid-cell"><div class="stat-cell-value"><%= stats.totalUsers %></div><div class="stat-cell-label">Üye</div></div>
+  </div>
+</div>
+
+<div class="forum-block">
+  <div class="forum-header"><i class="fas fa-clock-rotate-left"></i> Son Konular</div>
+  <% threads.forEach(function(t){ %>
+    <a class="forum-row hamdi-forum-row" href="/<%= t.categories.slug %>/<%= t.id %>-<%= t.slug %>.html">
+      <span class="hamdi-avatar-holder">
+        <% if (t.users && t.users.avatar_url) { %><img src="<%= t.users.avatar_url %>" alt="">
+        <% } else { %><i class="fas fa-user"></i><% } %>
+      </span>
+      <span class="hamdi-main-info">
+        <span class="hamdi-title"><% if (t.is_pinned) { %><i class="fas fa-thumbtack" title="Sabit"></i> <% } %><%= t.title %></span>
+        <span class="hamdi-author">
+          <%= t.users ? t.users.username : 'Silinmiş Üye' %>
+          <i class="fas fa-circle-check mf-verified" title="Onaylı üye"></i>
+          · <%= t.categories.name %>
+        </span>
+      </span>
+      <span class="hamdi-replies-zone"><i class="fas fa-comment"></i> <%= t.reply_count %></span>
+    </a>
+  <% }); %>
+  <% if (!threads.length) { %><p class="mf-empty">Henüz konu açılmamış.</p><% } %>
+</div>
+
+<%- include('partials/footer') %>

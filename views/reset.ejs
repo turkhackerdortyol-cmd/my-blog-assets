@@ -1,0 +1,19 @@
+<%- include('partials/top', { title: 'Şifre Sıfırla' }) %>
+
+<div class="mf-auth-box">
+  <h1><i class="fas fa-key"></i> Yeni Şifre Belirle</h1>
+  <% if (error) { %><div class="mf-alert mf-alert-error"><%= error %></div><% } %>
+  <% if (token) { %>
+    <form method="post" action="/sifre-sifirla/<%= token %>">
+      <label>Yeni şifre</label>
+      <input type="password" name="password" required minlength="6">
+      <label>Yeni şifre (tekrar)</label>
+      <input type="password" name="password2" required minlength="6">
+      <button type="submit" class="mf-cta mf-cta-block"><i class="fas fa-check"></i> Şifreyi Güncelle</button>
+    </form>
+  <% } else { %>
+    <div class="mf-auth-links"><a href="/sifremi-unuttum">Yeni bağlantı iste</a></div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

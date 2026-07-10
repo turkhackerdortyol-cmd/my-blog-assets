@@ -1,0 +1,46 @@
+<%- include('partials/top', { title: '@' + profile.username + ' - Profil' }) %>
+
+<div class="mf-profile-head">
+  <div class="mf-profile-avatar">
+    <% if (profile.avatar_url) { %><img src="<%= profile.avatar_url %>" alt="">
+    <% } else { %><i class="fas fa-user"></i><% } %>
+  </div>
+  <div class="mf-profile-info">
+    <h1><%= profile.username %> <i class="fas fa-circle-check mf-verified" title="Onaylı üye"></i>
+      <% if (profile.role !== 'member') { %><span class="mf-role-badge mf-role-<%= profile.role %>"><%= profile.role === 'admin' ? 'Admin' : 'Moderatör' %></span><% } %>
+    </h1>
+    <% if (profile.bio) { %><p class="mf-bio"><%= profile.bio %></p><% } %>
+    <div class="mf-profile-meta">
+      <% if (profile.location) { %><span><i class="fas fa-location-dot"></i> <%= profile.location %></span><% } %>
+      <span><i class="fas fa-calendar"></i> Katılım: <%= new Date(profile.created_at).toLocaleDateString('tr-TR') %></span>
+    </div>
+    <div class="mf-profile-social">
+      <% if (profile.social_twitter) { %><a href="<%= profile.social_twitter %>" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a><% } %>
+      <% if (profile.social_instagram) { %><a href="<%= profile.social_instagram %>" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a><% } %>
+      <% if (profile.social_youtube) { %><a href="<%= profile.social_youtube %>" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a><% } %>
+      <% if (profile.social_facebook) { %><a href="<%= profile.social_facebook %>" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i></a><% } %>
+      <% if (profile.social_website) { %><a href="<%= profile.social_website %>" target="_blank" rel="noopener"><i class="fas fa-globe"></i></a><% } %>
+    </div>
+  </div>
+</div>
+
+<div class="hamdi-stat-block">
+  <div class="stat-grid-row">
+    <div class="stat-grid-cell"><div class="stat-cell-value"><%= profile.thread_count %></div><div class="stat-cell-label">Konu</div></div>
+    <div class="stat-grid-cell"><div class="stat-cell-value"><%= profile.post_count %></div><div class="stat-cell-label">Mesaj</div></div>
+    <div class="stat-grid-cell"><div class="stat-cell-value"><%= profile.likes_received %></div><div class="stat-cell-label"><i class="fas fa-heart"></i> Beğeni</div></div>
+  </div>
+</div>
+
+<div class="forum-block">
+  <div class="forum-header"><i class="fas fa-comments"></i> Son Konuları</div>
+  <% threads.forEach(function(t){ %>
+    <a class="forum-row hamdi-forum-row" href="/<%= t.categories.slug %>/<%= t.id %>-<%= t.slug %>.html">
+      <span class="hamdi-title"><%= t.title %></span>
+      <span class="hamdi-meta"><%= new Date(t.created_at).toLocaleDateString('tr-TR') %></span>
+    </a>
+  <% }); %>
+  <% if (!threads.length) { %><p class="mf-empty">Henüz konu açılmamış.</p><% } %>
+</div>
+
+<%- include('partials/footer') %>

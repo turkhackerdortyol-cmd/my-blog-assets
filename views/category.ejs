@@ -1,0 +1,39 @@
+<%- include('partials/top', { title: category.name + ' - ' + (siteSettings.site_name || 'MiFRM Forum'), description: category.description }) %>
+
+<nav class="hm-breadcrumb">
+  <a href="/">Anasayfa</a><span class="hm-bc-sep">/</span><span class="hm-bc-current"><%= category.name %></span>
+</nav>
+
+<div class="forum-block">
+  <div class="forum-header">
+    <i class="fas <%= category.icon || 'fa-comments' %>"></i> <%= category.name %>
+    <% if (currentUser) { %>
+      <a class="mf-cta mf-cta-small" href="/<%= category.slug %>/yeni-konu" style="float:right"><i class="fas fa-plus"></i> Yeni Konu</a>
+    <% } %>
+  </div>
+  <% threads.forEach(function(t){ %>
+    <a class="forum-row hamdi-forum-row" href="/<%= category.slug %>/<%= t.id %>-<%= t.slug %>.html">
+      <span class="hamdi-avatar-holder">
+        <% if (t.users && t.users.avatar_url) { %><img src="<%= t.users.avatar_url %>" alt="">
+        <% } else { %><i class="fas fa-user"></i><% } %>
+      </span>
+      <span class="hamdi-main-info">
+        <span class="hamdi-title"><% if (t.is_pinned) { %><i class="fas fa-thumbtack" title="Sabit"></i> <% } %><% if (t.is_locked) { %><i class="fas fa-lock" title="Kilitli"></i> <% } %><%= t.title %></span>
+        <span class="hamdi-author"><%= t.users ? t.users.username : 'Silinmiş Üye' %> <i class="fas fa-circle-check mf-verified"></i></span>
+      </span>
+      <span class="hamdi-replies-zone"><i class="fas fa-comment"></i> <%= t.reply_count %></span>
+      <span class="hamdi-arrow-zone"><i class="fas fa-eye"></i> <%= t.view_count %></span>
+    </a>
+  <% }); %>
+  <% if (!threads.length) { %><p class="mf-empty">Bu kategoride henüz konu yok. <% if (currentUser) { %><a href="/<%= category.slug %>/yeni-konu">İlk konuyu sen aç!</a><% } %></p><% } %>
+</div>
+
+<% if (totalPages > 1) { %>
+<div class="hm-pager">
+  <% for (let p=1; p<=totalPages; p++) { %>
+    <a class="hm-pager-btn <%= p===page?'active':'' %>" href="?sayfa=<%= p %>"><%= p %></a>
+  <% } %>
+</div>
+<% } %>
+
+<%- include('partials/footer') %>

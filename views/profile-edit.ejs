@@ -1,0 +1,28 @@
+<%- include('partials/top', { title: 'Profili Düzenle' }) %>
+
+<div class="mf-auth-box">
+  <h1><i class="fas fa-pen"></i> Profili Düzenle</h1>
+  <% if (success) { %><div class="mf-alert mf-alert-ok">Profiliniz güncellendi.</div><% } %>
+  <% if (error) { %><div class="mf-alert mf-alert-error"><%= error %></div><% } %>
+  <form method="post" action="/profil/duzenle">
+    <label>Avatar URL</label>
+    <input type="url" name="avatar_url" value="<%= currentUser.avatar_url || '' %>" placeholder="https://...">
+    <label>Hakkımda</label>
+    <textarea name="bio" rows="3" maxlength="500"><%= currentUser.bio || '' %></textarea>
+    <label>Memleket / Konum</label>
+    <input type="text" name="location" value="<%= currentUser.location || '' %>">
+    <label><i class="fa-brands fa-x-twitter"></i> Twitter/X URL</label>
+    <input type="url" name="social_twitter" value="<%= currentUser.social_twitter || '' %>">
+    <label><i class="fa-brands fa-instagram"></i> Instagram URL</label>
+    <input type="url" name="social_instagram" value="<%= currentUser.social_instagram || '' %>">
+    <label><i class="fa-brands fa-youtube"></i> YouTube URL</label>
+    <input type="url" name="social_youtube" value="<%= currentUser.social_youtube || '' %>">
+    <label><i class="fa-brands fa-facebook"></i> Facebook URL</label>
+    <input type="url" name="social_facebook" value="<%= currentUser.social_facebook || '' %>">
+    <label><i class="fas fa-globe"></i> Web sitesi</label>
+    <input type="url" name="social_website" value="<%= currentUser.social_website || '' %>">
+    <button type="submit" class="mf-cta mf-cta-block"><i class="fas fa-check"></i> Kaydet</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

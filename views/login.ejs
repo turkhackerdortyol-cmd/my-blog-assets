@@ -1,0 +1,20 @@
+<%- include('partials/top', { title: 'Giriş Yap' }) %>
+
+<div class="mf-auth-box">
+  <h1><i class="fas fa-right-to-bracket"></i> Giriş Yap</h1>
+  <% if (error) { %><div class="mf-alert mf-alert-error"><%= error %></div><% } %>
+  <form method="post" action="/giris">
+    <input type="hidden" name="next" value="<%= next %>">
+    <label>Kullanıcı adı veya e-posta</label>
+    <input type="text" name="identifier" required autofocus>
+    <label>Şifre</label>
+    <input type="password" name="password" required>
+    <button type="submit" class="mf-cta mf-cta-block"><i class="fas fa-right-to-bracket"></i> Giriş Yap</button>
+  </form>
+  <div class="mf-auth-links">
+    <a href="/sifremi-unuttum">Şifremi unuttum</a>
+    <a href="/kayit">Hesabın yok mu? Üye ol</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

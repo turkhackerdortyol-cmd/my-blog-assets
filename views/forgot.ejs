@@ -1,0 +1,18 @@
+<%- include('partials/top', { title: 'Şifremi Unuttum' }) %>
+
+<div class="mf-auth-box">
+  <h1><i class="fas fa-key"></i> Şifremi Unuttum</h1>
+  <% if (sent) { %>
+    <div class="mf-alert mf-alert-ok">Eğer bu e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi. Gelen kutunuzu (ve spam klasörünü) kontrol edin.</div>
+  <% } else { %>
+    <% if (error) { %><div class="mf-alert mf-alert-error"><%= error %></div><% } %>
+    <form method="post" action="/sifremi-unuttum">
+      <label>Kayıtlı e-posta adresiniz</label>
+      <input type="email" name="email" required autofocus>
+      <button type="submit" class="mf-cta mf-cta-block"><i class="fas fa-paper-plane"></i> Sıfırlama Bağlantısı Gönder</button>
+    </form>
+  <% } %>
+  <div class="mf-auth-links"><a href="/giris">Girişe dön</a></div>
+</div>
+
+<%- include('partials/footer') %>
